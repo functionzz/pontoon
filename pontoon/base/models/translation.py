@@ -210,6 +210,19 @@ class Translation(DirtyFieldsMixin, models.Model):
         Return the date and user associated with the latest activity on
         this translation.
         """
+
+        dates = {
+            "approved": self.approved_date,
+            "unapproved": self.unapproved_date,
+            "rejected": self.rejected_date,
+            "unrejected": self.unrejected_date,
+            "submitted": self.date,
+        }
+
+        latest_date = max(
+            date for date in dates.values() if date is not None
+        )
+        
         if self.approved_date is not None and self.approved_date > self.date:
             return {
                 "translation": self,
