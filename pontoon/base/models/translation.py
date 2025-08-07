@@ -212,31 +212,25 @@ class Translation(DirtyFieldsMixin, models.Model):
         """
 
         dates = {
+            "submitted": self.date,
             "approved": self.approved_date,
             "unapproved": self.unapproved_date,
             "rejected": self.rejected_date,
             "unrejected": self.unrejected_date,
-            "submitted": self.date,
         }
 
-        latest_date = max(
-            date for date in dates.values() if date is not None
+        latest_date_type, latest_date = max(
+            ((k, v) for k, v in dates.items() if v is not None),
+            key=lambda date: date[1]
         )
-        
-        if self.approved_date is not None and self.approved_date > self.date:
-            return {
-                "translation": self,
-                "date": self.approved_date,
-                "user": self.approved_user,
-                "type": "approved",
-            }
-        else:
-            return {
-                "translation": self,
-                "date": self.date,
-                "user": self.user,
-                "type": "submitted",
-            }
+
+        return {
+            "translation": self,
+            "date": dates[latest_date_type],
+            "user": self.user,
+            "type": latest_date_type,
+        }
+    
 
     @property
     def machinery_sources_values(self):
