@@ -1,11 +1,17 @@
-.add {
-  float: right;
-}
-
 menu.controls {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+menu.controls .search-wrapper {
+  flex: 1;
+}
+
+menu.controls #add-project,
+menu.controls #toggle-projects {
+  flex-shrink: 0;
+  width: 200px;
 }
 
 .disabled-projects {
@@ -27,8 +33,8 @@ menu.controls {
 
 #recalculate-stats {
   float: right;
+  width: 200px;
   background: var(--button-background-2);
-  width: 180px;
   color: var(--light-grey-7);
 }
 
