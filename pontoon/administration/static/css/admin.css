@@ -24,3 +24,13 @@ menu.controls {
 .request-toggle.back:before {
   content: '';
 }
+
+#recalculate-stats {
+  float: right;
+  background: var(--button-background-2);
+  color: var(--light-grey-7);
+}
+
+#recalculate-stats:hover {
+  background: var(--button-background-hover-2);
+}

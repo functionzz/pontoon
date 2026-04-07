@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 $(function () {
-  $('#calculate-stats').on('click', function (e) {
+  $('#recalculate-stats').on('click', function (e) {
     e.preventDefault();
 
     const button = $(this),
