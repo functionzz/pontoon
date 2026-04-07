@@ -28,6 +28,7 @@ menu.controls {
 #recalculate-stats {
   float: right;
   background: var(--button-background-2);
+  width: 180px;
   color: var(--light-grey-7);
 }
 
