@@ -11,22 +11,40 @@ type Props = {
   translation: MachineryTranslation;
 };
 
-function ProjectList({ projects }: { projects: (string | null)[] }) {
-  const notEmpty = projects.filter(Boolean) as string[];
+type tmEntry = {
+  projectName: string;
+  projectSlug: string;
+  entities: number[];
+};
 
-  if (notEmpty.length === 0) {
+function ProjectList({ tmEntries }: { tmEntries: tmEntry[] }) {
+  const { code } = useContext(Locale);
+
+  if (tmEntries.length === 0) {
     return <TranslationMemory />;
   }
 
   return (
     <>
-      {notEmpty.map((project) => (
-        <li key={project}>
-          <span className='translation-source'>
-            <span>{project.toUpperCase()}</span>
-          </span>
-        </li>
-      ))}
+      {tmEntries.map((tmEntry) =>
+        tmEntry.projectSlug ? (
+          <li key={tmEntry.projectName}>
+            {tmEntry.entities.length > 0 ? (
+              <a
+                className='translation-source'
+                href={`/${code}/${tmEntry.projectSlug}/all-resources/?list=${tmEntry.entities.join(',')}&string=${tmEntry.entities[0]}`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span>{tmEntry.projectName.toUpperCase()}</span>
+              </a>
+            ) : (
+              <span className='translation-source'>
+                <span>{tmEntry.projectName.toUpperCase()}</span>
+              </span>
+            )}
+          </li>
+        ) : null,
+      )}
     </>
   );
 }
@@ -36,14 +54,20 @@ export function ConcordanceSearch({
   translation,
 }: Props): React.ReactElement {
   const { code, direction, script } = useContext(Locale);
-  const projects = translation.projectNames;
-  const title = projects?.filter(Boolean).join(' • ');
+  const tmEntries = translation.tmEntries;
+
+  const title = tmEntries
+    ?.reduce((acc, entry) => {
+      acc.push(entry.projectName);
+      return acc;
+    }, [] as string[])
+    .join(' • ');
 
   return (
     <>
       <header>
         <ul className='sources projects' title={title}>
-          {projects && <ProjectList projects={projects} />}
+          {tmEntries && <ProjectList tmEntries={tmEntries} />}
         </ul>
       </header>
       <p className='original'>
