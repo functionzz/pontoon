@@ -77,7 +77,9 @@ def concordance_search(request):
             status=400,
         )
 
-    paginator = Paginator(get_concordance_search_data(text, locale), page_results_limit)
+    paginator = Paginator(
+        get_concordance_search_data(request, text, locale), page_results_limit
+    )
 
     try:
         data = paginator.page(page)

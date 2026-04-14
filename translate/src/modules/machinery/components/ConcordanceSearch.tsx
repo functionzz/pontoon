@@ -14,6 +14,7 @@ type Props = {
 type tmEntry = {
   projectName: string;
   projectSlug: string;
+  projectDisabled: boolean;
   entities: number[];
 };
 
@@ -29,7 +30,7 @@ function ProjectList({ tmEntries }: { tmEntries: tmEntry[] }) {
       {tmEntries.map((tmEntry) =>
         tmEntry.projectSlug ? (
           <li key={tmEntry.projectName}>
-            {tmEntry.entities.length > 0 ? (
+            {tmEntry.entities.length > 0 && !tmEntry.projectDisabled ? (
               <a
                 className='translation-source'
                 href={`/${code}/${tmEntry.projectSlug}/all-resources/?list=${tmEntry.entities.join(',')}&string=${tmEntry.entities[0]}`}

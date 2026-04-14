@@ -26,6 +26,7 @@ from django.db.models.functions import JSONObject
 
 import pontoon.base as base
 
+from pontoon.base.models.project import Project
 from pontoon.base.models.translation_memory import TranslationMemoryEntry
 from pontoon.base.placeables import get_placeables
 
@@ -266,7 +267,7 @@ def store_new_terms(url, headers, new_terms):
             log.error(f"Adding new glossary terms failed: {r.content}")
 
 
-def get_concordance_search_data(text, locale):
+def get_concordance_search_data(request, text, locale):
     search_phrases = base.utils.get_search_phrases(text)
     search_filters = (
         Q(
@@ -278,19 +279,18 @@ def get_concordance_search_data(text, locale):
     )
     search_query = reduce(operator.and_, search_filters)
 
+    projects = Project.objects.visible_for(request.user)
+
     search_results = (
-        TranslationMemoryEntry.objects.filter(search_query)
-        .filter(
-            project__visibility="public",
-            project__disabled=False,
-            project__system_project=False,
-        )
+        TranslationMemoryEntry.objects.filter(search_query, project__in=projects)
+        # TranslationMemoryEntry.objects.filter(search_query)
         .values("source", "target")
         .annotate(
             tmEntries=JSONBAgg(
                 JSONObject(
                     project_name="project__name",
                     project_slug="project__slug",
+                    project_disabled="project__disabled",
                     entity="entity",
                 ),
                 distinct=True,
@@ -302,14 +302,23 @@ def get_concordance_search_data(text, locale):
         grouped = defaultdict(list)
 
         for entry in result["tmEntries"]:
-            key = (entry["project_name"], entry["project_slug"])
+            key = (
+                entry["project_name"],
+                entry["project_slug"],
+                entry["project_disabled"],
+            )
             if entry["project_slug"] and entry["entity"]:
                 grouped[key].append(entry["entity"])
             elif entry["project_slug"]:
                 grouped.setdefault(key, [])
 
         result["tmEntries"] = [
-            {"projectName": k[0], "projectSlug": k[1], "entities": entities}
+            {
+                "projectName": k[0],
+                "projectSlug": k[1],
+                "projectDisabled": k[2],
+                "entities": entities,
+            }
             for k, entities in grouped.items()
         ]
 

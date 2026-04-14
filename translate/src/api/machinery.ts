@@ -26,6 +26,7 @@ export type MachineryTranslation = {
   tmEntries?: {
     projectName: string;
     projectSlug: string;
+    projectDisabled: boolean;
     entities: number[];
   }[];
   projectNames?: Array<string | null>;
@@ -74,6 +75,7 @@ export async function fetchConcordanceResults(
       tmEntries: {
         projectName: string;
         projectSlug: string;
+        projectDisabled: boolean;
         entities: number[];
       }[];
     }>;

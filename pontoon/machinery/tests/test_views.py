@@ -624,7 +624,18 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
     result = json.loads(response.content)
     assert result == {
         "results": [
-            {"source": "aBaf", "target": "cCDd", "project_names": [project_a.name]}
+            {
+                "source": "aBaf",
+                "target": "cCDd",
+                "tmEntries": [
+                    {
+                        "projectName": "Project A",
+                        "projectSlug": "project_a",
+                        "projectDisabled": False,
+                        "entities": [entities[1].id],
+                    }
+                ],
+            }
         ],
         "has_next": False,
     }
@@ -636,7 +647,18 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
     result = json.loads(response.content)
     assert result == {
         "results": [
-            {"source": "abaa", "target": "ccc", "project_names": [project_a.name]}
+            {
+                "source": "abaa",
+                "target": "ccc",
+                "tmEntries": [
+                    {
+                        "projectName": "Project A",
+                        "projectSlug": "project_a",
+                        "projectDisabled": False,
+                        "entities": [entities[0].id],
+                    }
+                ],
+            }
         ],
         "has_next": False,
     }
@@ -693,9 +715,33 @@ def test_view_concordance_search_multiple_project_names(
             {
                 "source": "abaa",
                 "target": "ccc",
-                "project_names": [project_a.name, project_b.name],
+                "tmEntries": [
+                    {
+                        "projectName": project_a.name,
+                        "projectSlug": project_a.slug,
+                        "projectDisabled": project_a.disabled,
+                        "entities": [entities[0].id],
+                    },
+                    {
+                        "projectName": project_b.name,
+                        "projectSlug": project_b.slug,
+                        "projectDisabled": project_b.disabled,
+                        "entities": [entities[0].id],
+                    },
+                ],
             },
-            {"source": "abaf", "target": "ccc", "project_names": [project_a.name]},
+            {
+                "source": "abaf",
+                "target": "ccc",
+                "tmEntries": [
+                    {
+                        "projectName": project_a.name,
+                        "projectSlug": project_a.slug,
+                        "projectDisabled": project_a.disabled,
+                        "entities": [entities[1].id],
+                    }
+                ],
+            },
         ],
         "has_next": False,
     }
@@ -752,9 +798,42 @@ def test_view_concordance_search_remove_duplicates(
     results = json.loads(response.content)
     assert results == {
         "results": [
-            {"source": "abaa", "target": "ccc", "project_names": [project_a.name]},
-            {"source": "abaf", "target": "ccc", "project_names": [project_a.name]},
-            {"source": "abaf", "target": "cccbbb", "project_names": [project_a.name]},
+            {
+                "source": "abaa",
+                "target": "ccc",
+                "tmEntries": [
+                    {
+                        "projectName": project_a.name,
+                        "projectSlug": project_a.slug,
+                        "projectDisabled": project_a.disabled,
+                        "entities": [entities[0].id],
+                    }
+                ],
+            },
+            {
+                "source": "abaf",
+                "target": "ccc",
+                "tmEntries": [
+                    {
+                        "projectName": project_a.name,
+                        "projectSlug": project_a.slug,
+                        "projectDisabled": project_a.disabled,
+                        "entities": [entities[1].id],
+                    }
+                ],
+            },
+            {
+                "source": "abaf",
+                "target": "cccbbb",
+                "tmEntries": [
+                    {
+                        "projectName": project_a.name,
+                        "projectSlug": project_a.slug,
+                        "projectDisabled": project_a.disabled,
+                        "entities": [entities[1].id],
+                    }
+                ],
+            },
         ],
         "has_next": False,
     }
@@ -815,7 +894,18 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
     results = json.loads(response.content)
     assert results == {
         "results": [
-            {"source": "abaa", "target": "ccc", "project_names": [project_a.name]},
+            {
+                "source": "abaa",
+                "target": "ccc",
+                "tmEntries": [
+                    {
+                        "projectName": project_a.name,
+                        "projectSlug": project_a.slug,
+                        "projectDisabled": project_a.disabled,
+                        "entities": [entities[0].id],
+                    }
+                ],
+            },
         ],
         "has_next": True,
     }
@@ -827,7 +917,18 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
     results = json.loads(response.content)
     assert results == {
         "results": [
-            {"source": "abaf", "target": "cccbbb", "project_names": [project_a.name]},
+            {
+                "source": "abaf",
+                "target": "cccbbb",
+                "tmEntries": [
+                    {
+                        "projectName": project_a.name,
+                        "projectSlug": project_a.slug,
+                        "projectDisabled": project_a.disabled,
+                        "entities": [entities[1].id],
+                    }
+                ],
+            },
         ],
         "has_next": False,
     }
