@@ -943,3 +943,56 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
         "results": [],
         "has_next": False,
     }
+
+
+@pytest.mark.django_db
+def test_view_concordance_search_null_project_exclusion(
+    client, project_a, locale_a, resource_a
+):
+    entities = [
+        EntityFactory(
+            resource=resource_a,
+            string=x,
+            order=i,
+        )
+        for i, x in enumerate(["abaa", "abaf"])
+    ]
+
+    TranslationMemoryFactory.create(
+        entity=entities[0],
+        source=entities[0].string,
+        target="ccc",
+        locale=locale_a,
+        project=None,
+    )
+
+    TranslationMemoryFactory.create(
+        entity=entities[1],
+        source=entities[1].string,
+        target="cccbbb",
+        locale=locale_a,
+        project=project_a,
+    )
+
+    response = client.get(
+        "/concordance-search/",
+        {"text": "ccc", "locale": locale_a.code},
+    )
+    results = json.loads(response.content)
+    assert results == {
+        "results": [
+            {
+                "source": "abaf",
+                "target": "cccbbb",
+                "tmEntries": [
+                    {
+                        "projectName": project_a.name,
+                        "projectSlug": project_a.slug,
+                        "projectDisabled": project_a.disabled,
+                        "entities": [entities[1].id],
+                    }
+                ],
+            },
+        ],
+        "has_next": False,
+    }
