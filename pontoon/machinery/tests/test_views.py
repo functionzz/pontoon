@@ -627,11 +627,11 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
             {
                 "source": "aBaf",
                 "target": "cCDd",
-                "tmEntries": [
+                "tm_entries": [
                     {
-                        "projectName": "Project A",
-                        "projectSlug": "project_a",
-                        "projectDisabled": False,
+                        "project_name": "Project A",
+                        "project_slug": "project_a",
+                        "project_disabled": False,
                         "entities": [entities[1].id],
                     }
                 ],
@@ -650,11 +650,11 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
             {
                 "source": "abaa",
                 "target": "ccc",
-                "tmEntries": [
+                "tm_entries": [
                     {
-                        "projectName": "Project A",
-                        "projectSlug": "project_a",
-                        "projectDisabled": False,
+                        "project_name": "Project A",
+                        "project_slug": "project_a",
+                        "project_disabled": False,
                         "entities": [entities[0].id],
                     }
                 ],
@@ -715,17 +715,17 @@ def test_view_concordance_search_multiple_project_names(
             {
                 "source": "abaa",
                 "target": "ccc",
-                "tmEntries": [
+                "tm_entries": [
                     {
-                        "projectName": project_a.name,
-                        "projectSlug": project_a.slug,
-                        "projectDisabled": project_a.disabled,
+                        "project_name": project_a.name,
+                        "project_slug": project_a.slug,
+                        "project_disabled": project_a.disabled,
                         "entities": [entities[0].id],
                     },
                     {
-                        "projectName": project_b.name,
-                        "projectSlug": project_b.slug,
-                        "projectDisabled": project_b.disabled,
+                        "project_name": project_b.name,
+                        "project_slug": project_b.slug,
+                        "project_disabled": project_b.disabled,
                         "entities": [entities[0].id],
                     },
                 ],
@@ -733,11 +733,11 @@ def test_view_concordance_search_multiple_project_names(
             {
                 "source": "abaf",
                 "target": "ccc",
-                "tmEntries": [
+                "tm_entries": [
                     {
-                        "projectName": project_a.name,
-                        "projectSlug": project_a.slug,
-                        "projectDisabled": project_a.disabled,
+                        "project_name": project_a.name,
+                        "project_slug": project_a.slug,
+                        "project_disabled": project_a.disabled,
                         "entities": [entities[1].id],
                     }
                 ],
@@ -801,11 +801,11 @@ def test_view_concordance_search_remove_duplicates(
             {
                 "source": "abaa",
                 "target": "ccc",
-                "tmEntries": [
+                "tm_entries": [
                     {
-                        "projectName": project_a.name,
-                        "projectSlug": project_a.slug,
-                        "projectDisabled": project_a.disabled,
+                        "project_name": project_a.name,
+                        "project_slug": project_a.slug,
+                        "project_disabled": project_a.disabled,
                         "entities": [entities[0].id],
                     }
                 ],
@@ -813,11 +813,11 @@ def test_view_concordance_search_remove_duplicates(
             {
                 "source": "abaf",
                 "target": "ccc",
-                "tmEntries": [
+                "tm_entries": [
                     {
-                        "projectName": project_a.name,
-                        "projectSlug": project_a.slug,
-                        "projectDisabled": project_a.disabled,
+                        "project_name": project_a.name,
+                        "project_slug": project_a.slug,
+                        "project_disabled": project_a.disabled,
                         "entities": [entities[1].id],
                     }
                 ],
@@ -825,11 +825,11 @@ def test_view_concordance_search_remove_duplicates(
             {
                 "source": "abaf",
                 "target": "cccbbb",
-                "tmEntries": [
+                "tm_entries": [
                     {
-                        "projectName": project_a.name,
-                        "projectSlug": project_a.slug,
-                        "projectDisabled": project_a.disabled,
+                        "project_name": project_a.name,
+                        "project_slug": project_a.slug,
+                        "project_disabled": project_a.disabled,
                         "entities": [entities[1].id],
                     }
                 ],
@@ -897,11 +897,11 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
             {
                 "source": "abaa",
                 "target": "ccc",
-                "tmEntries": [
+                "tm_entries": [
                     {
-                        "projectName": project_a.name,
-                        "projectSlug": project_a.slug,
-                        "projectDisabled": project_a.disabled,
+                        "project_name": project_a.name,
+                        "project_slug": project_a.slug,
+                        "project_disabled": project_a.disabled,
                         "entities": [entities[0].id],
                     }
                 ],
@@ -920,11 +920,11 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
             {
                 "source": "abaf",
                 "target": "cccbbb",
-                "tmEntries": [
+                "tm_entries": [
                     {
-                        "projectName": project_a.name,
-                        "projectSlug": project_a.slug,
-                        "projectDisabled": project_a.disabled,
+                        "project_name": project_a.name,
+                        "project_slug": project_a.slug,
+                        "project_disabled": project_a.disabled,
                         "entities": [entities[1].id],
                     }
                 ],
@@ -984,11 +984,11 @@ def test_view_concordance_search_null_project_exclusion(
             {
                 "source": "abaf",
                 "target": "cccbbb",
-                "tmEntries": [
+                "tm_entries": [
                     {
-                        "projectName": project_a.name,
-                        "projectSlug": project_a.slug,
-                        "projectDisabled": project_a.disabled,
+                        "project_name": project_a.name,
+                        "project_slug": project_a.slug,
+                        "project_disabled": project_a.disabled,
                         "entities": [entities[1].id],
                     }
                 ],

@@ -285,7 +285,7 @@ def get_concordance_search_data(user, text, locale):
         TranslationMemoryEntry.objects.filter(search_query, project__in=projects)
         .values("source", "target")
         .annotate(
-            tmEntries=JSONBAgg(
+            tm_entries=JSONBAgg(
                 JSONObject(
                     project_name="project__name",
                     project_slug="project__slug",
@@ -300,7 +300,7 @@ def get_concordance_search_data(user, text, locale):
     for result in search_results:
         grouped = defaultdict(list)
 
-        for entry in result["tmEntries"]:
+        for entry in result["tm_entries"]:
             key = (
                 entry["project_name"],
                 entry["project_slug"],
@@ -332,7 +332,7 @@ def get_concordance_search_data(user, text, locale):
                 levenshtein_distance(text, entity["target"]),
                 levenshtein_distance(text, entity["source"]),
             ),
-            len(entity["tmEntries"]),
+            len(entity["tm_entries"]),
         )
 
     return sorted(search_results, key=sort_by_quality, reverse=True)
