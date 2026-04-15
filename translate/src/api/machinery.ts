@@ -72,10 +72,10 @@ export async function fetchConcordanceResults(
     results: Array<{
       source: string;
       target: string;
-      tmEntries: {
-        projectName: string;
-        projectSlug: string;
-        projectDisabled: boolean;
+      tm_entries: {
+        project_name: string;
+        project_slug: string;
+        project_disabled: boolean;
         entities: number[];
       }[];
     }>;
@@ -88,7 +88,12 @@ export async function fetchConcordanceResults(
           sources: ['concordance-search'],
           original: item.source,
           translation: item.target,
-          tmEntries: item.tmEntries,
+          tmEntries: item.tm_entries.map((entry) => ({
+            projectName: entry.project_name,
+            projectSlug: entry.project_slug,
+            projectDisabled: entry.project_disabled,
+            entities: entry.entities,
+          })),
         })),
         hasMore: has_next,
       }

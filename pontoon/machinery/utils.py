@@ -267,7 +267,7 @@ def store_new_terms(url, headers, new_terms):
             log.error(f"Adding new glossary terms failed: {r.content}")
 
 
-def get_concordance_search_data(request, text, locale):
+def get_concordance_search_data(user, text, locale):
     search_phrases = base.utils.get_search_phrases(text)
     search_filters = (
         Q(
@@ -279,11 +279,10 @@ def get_concordance_search_data(request, text, locale):
     )
     search_query = reduce(operator.and_, search_filters)
 
-    projects = Project.objects.visible_for(request.user)
+    projects = Project.objects.visible_for(user)
 
     search_results = (
         TranslationMemoryEntry.objects.filter(search_query, project__in=projects)
-        # TranslationMemoryEntry.objects.filter(search_query)
         .values("source", "target")
         .annotate(
             tmEntries=JSONBAgg(
@@ -312,11 +311,11 @@ def get_concordance_search_data(request, text, locale):
             elif entry["project_slug"]:
                 grouped.setdefault(key, [])
 
-        result["tmEntries"] = [
+        result["tm_entries"] = [
             {
-                "projectName": k[0],
-                "projectSlug": k[1],
-                "projectDisabled": k[2],
+                "project_name": k[0],
+                "project_slug": k[1],
+                "project_disabled": k[2],
                 "entities": entities,
             }
             for k, entities in grouped.items()
@@ -340,7 +339,7 @@ def get_concordance_search_data(request, text, locale):
 
 
 def get_translation_memory_data(text, locale, pk=None):
-    entries = base.models.TranslationMemoryEntry.objects.filter(
+    entries = TranslationMemoryEntry.objects.filter(
         locale=locale
     ).minimum_levenshtein_ratio(text)
 

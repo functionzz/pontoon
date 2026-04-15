@@ -27,25 +27,23 @@ function ProjectList({ tmEntries }: { tmEntries: tmEntry[] }) {
 
   return (
     <>
-      {tmEntries.map((tmEntry) =>
-        tmEntry.projectSlug ? (
-          <li key={tmEntry.projectName}>
-            {tmEntry.entities.length > 0 && !tmEntry.projectDisabled ? (
-              <a
-                className='translation-source'
-                href={`/${code}/${tmEntry.projectSlug}/all-resources/?list=${tmEntry.entities.join(',')}&string=${tmEntry.entities[0]}`}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <span>{tmEntry.projectName.toUpperCase()}</span>
-              </a>
-            ) : (
-              <span className='translation-source'>
-                <span>{tmEntry.projectName.toUpperCase()}</span>
-              </span>
-            )}
-          </li>
-        ) : null,
-      )}
+      {tmEntries.map((tmEntry) => (
+        <li key={tmEntry.projectName}>
+          {tmEntry.entities.length > 0 && !tmEntry.projectDisabled ? (
+            <a
+              className='translation-source'
+              href={`/${code}/${tmEntry.projectSlug}/all-resources/?list=${tmEntry.entities.join(',')}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span>{tmEntry.projectName.toUpperCase()}</span>
+            </a>
+          ) : (
+            <span className='translation-source'>
+              <span>{tmEntry.projectName.toUpperCase()}</span>
+            </span>
+          )}
+        </li>
+      ))}
     </>
   );
 }
