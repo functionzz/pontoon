@@ -27,6 +27,7 @@ export type MachineryTranslation = {
     projectName: string;
     projectSlug: string;
     projectDisabled: boolean;
+    projectLocaleExists: boolean;
     entities: number[];
   }[];
   projectNames?: Array<string | null>;
@@ -76,6 +77,7 @@ export async function fetchConcordanceResults(
         project_name: string;
         project_slug: string;
         project_disabled: boolean;
+        project_locale_exists: boolean;
         entities: number[];
       }[];
     }>;
@@ -92,6 +94,7 @@ export async function fetchConcordanceResults(
             projectName: entry.project_name,
             projectSlug: entry.project_slug,
             projectDisabled: entry.project_disabled,
+            projectLocaleExists: entry.project_locale_exists,
             entities: entry.entities,
           })),
         })),

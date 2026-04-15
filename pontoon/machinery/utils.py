@@ -21,12 +21,13 @@ from django.conf import settings
 from django.contrib.postgres.aggregates import JSONBAgg
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
-from django.db.models import Q
+from django.db.models import BooleanField, Case, Q, When
 from django.db.models.functions import JSONObject
 
 import pontoon.base as base
 
 from pontoon.base.models.project import Project
+from pontoon.base.models.project_locale import ProjectLocale
 from pontoon.base.models.translation_memory import TranslationMemoryEntry
 from pontoon.base.placeables import get_placeables
 
@@ -280,6 +281,9 @@ def get_concordance_search_data(user, text, locale):
     search_query = reduce(operator.and_, search_filters)
 
     projects = Project.objects.visible_for(user)
+    pl_project_ids = ProjectLocale.objects.filter(locale=locale).values_list(
+        "project_id", flat=True
+    )
 
     search_results = (
         TranslationMemoryEntry.objects.filter(search_query, project__in=projects)
@@ -290,6 +294,11 @@ def get_concordance_search_data(user, text, locale):
                     project_name="project__name",
                     project_slug="project__slug",
                     project_disabled="project__disabled",
+                    project_locale_exists=Case(
+                        When(project__id__in=pl_project_ids, then=True),
+                        default=False,
+                        output_field=BooleanField(),
+                    ),
                     entity="entity",
                 ),
                 distinct=True,
@@ -305,6 +314,7 @@ def get_concordance_search_data(user, text, locale):
                 entry["project_name"],
                 entry["project_slug"],
                 entry["project_disabled"],
+                entry["project_locale_exists"],
             )
             if entry["project_slug"] and entry["entity"]:
                 grouped[key].append(entry["entity"])
@@ -316,6 +326,7 @@ def get_concordance_search_data(user, text, locale):
                 "project_name": k[0],
                 "project_slug": k[1],
                 "project_disabled": k[2],
+                "project_locale_exists": k[3],
                 "entities": entities,
             }
             for k, entities in grouped.items()

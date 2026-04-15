@@ -15,6 +15,7 @@ type tmEntry = {
   projectName: string;
   projectSlug: string;
   projectDisabled: boolean;
+  projectLocaleExists: boolean;
   entities: number[];
 };
 
@@ -29,7 +30,9 @@ function ProjectList({ tmEntries }: { tmEntries: tmEntry[] }) {
     <>
       {tmEntries.map((tmEntry) => (
         <li key={tmEntry.projectName}>
-          {tmEntry.entities.length > 0 && !tmEntry.projectDisabled ? (
+          {tmEntry.entities.length > 0 &&
+          !tmEntry.projectDisabled &&
+          tmEntry.projectLocaleExists ? (
             <a
               className='translation-source'
               href={`/${code}/${tmEntry.projectSlug}/all-resources/?list=${tmEntry.entities.join(',')}`}

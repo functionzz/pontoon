@@ -632,6 +632,7 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
                         "project_name": "Project A",
                         "project_slug": "project_a",
                         "project_disabled": False,
+                        "project_locale_exists": False,
                         "entities": [entities[1].id],
                     }
                 ],
@@ -655,6 +656,7 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
                         "project_name": "Project A",
                         "project_slug": "project_a",
                         "project_disabled": False,
+                        "project_locale_exists": False,
                         "entities": [entities[0].id],
                     }
                 ],
@@ -720,12 +722,14 @@ def test_view_concordance_search_multiple_project_names(
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
                         "project_disabled": project_a.disabled,
+                        "project_locale_exists": False,
                         "entities": [entities[0].id],
                     },
                     {
                         "project_name": project_b.name,
                         "project_slug": project_b.slug,
                         "project_disabled": project_b.disabled,
+                        "project_locale_exists": False,
                         "entities": [entities[0].id],
                     },
                 ],
@@ -738,6 +742,7 @@ def test_view_concordance_search_multiple_project_names(
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
                         "project_disabled": project_a.disabled,
+                        "project_locale_exists": False,
                         "entities": [entities[1].id],
                     }
                 ],
@@ -806,6 +811,7 @@ def test_view_concordance_search_remove_duplicates(
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
                         "project_disabled": project_a.disabled,
+                        "project_locale_exists": False,
                         "entities": [entities[0].id],
                     }
                 ],
@@ -818,6 +824,7 @@ def test_view_concordance_search_remove_duplicates(
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
                         "project_disabled": project_a.disabled,
+                        "project_locale_exists": False,
                         "entities": [entities[1].id],
                     }
                 ],
@@ -830,6 +837,7 @@ def test_view_concordance_search_remove_duplicates(
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
                         "project_disabled": project_a.disabled,
+                        "project_locale_exists": False,
                         "entities": [entities[1].id],
                     }
                 ],
@@ -902,6 +910,7 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
                         "project_disabled": project_a.disabled,
+                        "project_locale_exists": False,
                         "entities": [entities[0].id],
                     }
                 ],
@@ -925,6 +934,7 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
                         "project_disabled": project_a.disabled,
+                        "project_locale_exists": False,
                         "entities": [entities[1].id],
                     }
                 ],
@@ -989,6 +999,7 @@ def test_view_concordance_search_null_project_exclusion(
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
                         "project_disabled": project_a.disabled,
+                        "project_locale_exists": False,
                         "entities": [entities[1].id],
                     }
                 ],
