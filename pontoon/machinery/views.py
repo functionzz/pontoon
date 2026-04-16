@@ -18,6 +18,7 @@ from django.utils.html import strip_tags
 from django.views.decorators.http import require_POST
 
 from pontoon.base.models import Comment, Entity, Locale, Translation
+from pontoon.base.models.project import Project
 from pontoon.machinery.utils import (
     get_concordance_search_data,
     get_google_translate_data,
@@ -85,6 +86,26 @@ def concordance_search(request):
         data = paginator.page(page)
     except EmptyPage:
         return JsonResponse({"results": [], "has_next": False})
+
+    # JSONBAgg (used in get_concordance_search_data()) does not support using
+    # distinct=True in combination with ordering, so we need to do one of them
+    # manually - after pagination, to reduce the number of rows processed.
+    project_order = {
+        name: i
+        for i, name in enumerate(
+            list(
+                Project.objects.order_by("disabled", "-priority", "name").values_list(
+                    "name", flat=True
+                )
+            )
+        )
+    }
+
+    for result in data.object_list:
+        result["tm_entries"] = sorted(
+            result["tm_entries"],
+            key=lambda x: project_order.get(x["project_name"], float("inf")),
+        )
 
     return JsonResponse(
         {"results": data.object_list, "has_next": data.has_next()}, safe=False
