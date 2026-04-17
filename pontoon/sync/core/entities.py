@@ -281,11 +281,32 @@ def add_resources(
     changed_paths: set[str],
     now: datetime,
 ) -> tuple[int, set[str]]:
-    new_resources = [
-        Resource(project=project, path=db_path, format=get_res_format(res))
+
+    valid_updates = {
+        db_path: res
         for db_path, res in updates.items()
         if next(res.all_entries(), None) and db_path not in changed_paths
+    }
+
+    if not valid_updates:
+        return 0, set()
+
+    existing_paths = [
+        Resource.objects.filter(
+            project=project, path__in=valid_updates.keys()
+        ).values_list("path", flat=True)
     ]
+
+    Resource.objects.filter(project=project, path__in=existing_paths).update(
+        obsolete=False
+    )
+
+    new_resources = [
+        Resource(project=project, path=db_path, format=get_res_format(res))
+        for db_path, res in valid_updates.items()
+        if db_path not in existing_paths
+    ]
+
     if not new_resources:
         return 0, set()
 
