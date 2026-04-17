@@ -363,8 +363,7 @@ def update_translated_resources(
 ) -> None:
     prev_tr_keys: set[tuple[int, int]] = set(
         (tr["resource_id"], tr["locale_id"])
-        for tr in TranslatedResource.objects.current()
-        .filter(resource__project=project)
+        for tr in TranslatedResource.objects.filter(resource__project=project)
         .values("resource_id", "locale_id")
         .iterator()
     )
@@ -394,7 +393,7 @@ def update_translated_resources(
         del_tr_q = Q()
         for resource_id, locale_id in prev_tr_keys:
             del_tr_q |= Q(resource_id=resource_id, locale_id=locale_id)
-        _, del_dict = TranslatedResource.objects.current().filter(del_tr_q).delete()
+        _, del_dict = TranslatedResource.objects.filter(del_tr_q).delete()
         del_count = del_dict.get("base.translatedresource", 0)
         str_tr = "translated resource" if del_count == 1 else "translated resources"
         log.info(f"[{project.slug}] Removed {del_count} {str_tr}")

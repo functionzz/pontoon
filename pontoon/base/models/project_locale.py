@@ -76,7 +76,7 @@ class ProjectLocale(models.Model, AggregatedStats):
     def aggregated_stats_query(self):
         from pontoon.base.models.translated_resource import TranslatedResource
 
-        return TranslatedResource.objects.current().filter(
+        return TranslatedResource.objects.filter(
             locale=self.locale, resource__project=self.project
         )
 

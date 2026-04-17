@@ -19,7 +19,7 @@ class ResourceQuerySet(models.QuerySet):
 
         from pontoon.base.models.translated_resource import TranslatedResource
 
-        TranslatedResource.objects.filter(resource=self).delete()
+        TranslatedResource.objects.filter(resource__in=self).delete()
 
     def current(self):
         return self.filter(obsolete=False)

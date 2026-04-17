@@ -28,7 +28,7 @@ log = logging.getLogger(__name__)
 def project_locale_removed(sender, **kwargs):
     project_locale = kwargs.get("instance", None)
     if project_locale is not None:
-        TranslatedResource.objects.current().filter(
+        TranslatedResource.objects.filter(
             resource__project=project_locale.project, locale=project_locale.locale
         ).delete()
 

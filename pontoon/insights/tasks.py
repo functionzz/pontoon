@@ -272,8 +272,7 @@ def count_projectlocale_stats() -> Iterable[dict[str, int]]:
     which may need a local copy if the behaviour here is modified.
     """
     return (
-        TranslatedResource.objects.current()
-        .filter(
+        TranslatedResource.objects.filter(
             resource__project__disabled=False,
             resource__project__system_project=False,
             resource__project__visibility="public",

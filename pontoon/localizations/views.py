@@ -38,7 +38,7 @@ def localization(request, code, slug):
 
     get_object_or_404(ProjectLocale, locale=locale, project=project)
 
-    trans_res = TranslatedResource.objects.current().filter(
+    trans_res = TranslatedResource.objects.filter(
         locale=locale, resource__project=project
     )
 
@@ -75,8 +75,7 @@ def ajax_resources(request, code, slug):
 
     # Prefetch data needed for the latest activity column
     translatedresources = (
-        TranslatedResource.objects.current()
-        .filter(
+        TranslatedResource.objects.filter(
             resource__project=project,
             locale=locale,
             resource__entities__obsolete=False,

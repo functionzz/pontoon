@@ -65,8 +65,7 @@ def pretranslate(project: Project, paths: set[str] | None):
 
     # Fetch all available locale-resource pairs (TranslatedResource objects)
     tr_pairs = (
-        TranslatedResource.objects.current()
-        .filter(
+        TranslatedResource.objects.filter(
             resource__project=project,
             locale__in=locales,
         )
@@ -197,13 +196,9 @@ def pretranslate(project: Project, paths: set[str] | None):
         # `operator.ior` is the '|' Python operator, which turns into a logical OR
         # when used between django ORM query objects.
         tr_query = reduce(operator.ior, tr_filter)
-        translatedresources = (
-            TranslatedResource.objects.current()
-            .filter(tr_query)
-            .annotate(
-                locale_resource=Concat(
-                    "locale_id", V("-"), "resource_id", output_field=CharField()
-                )
+        translatedresources = TranslatedResource.objects.filter(tr_query).annotate(
+            locale_resource=Concat(
+                "locale_id", V("-"), "resource_id", output_field=CharField()
             )
         )
         translatedresources.calculate_stats()

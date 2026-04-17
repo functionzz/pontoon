@@ -80,8 +80,7 @@ def test_resource_obsoletion():
 
         # check TranslatedResource objects before resource obsoletion
         assert {
-            translated.resource.path
-            for translated in TranslatedResource.objects.current()
+            translated.resource.path for translated in TranslatedResource.objects.all()
         } == {"a.ftl", "b.po", "c.ftl", "common", "playground"}
 
         # Paths setup
@@ -107,10 +106,9 @@ def test_resource_obsoletion():
             "a.ftl",
             "b.po",
         }
-        assert TranslatedResource.objects.filter(resource=res_c).exists()
+        assert not TranslatedResource.objects.filter(resource=res_c).exists()
         assert {
-            translated.resource.path
-            for translated in TranslatedResource.objects.current()
+            translated.resource.path for translated in TranslatedResource.objects.all()
         } == {"a.ftl", "b.po", "common", "playground"}
         assert Entity.objects.filter(pk=entity_c.pk).exists()
 

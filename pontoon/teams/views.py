@@ -74,7 +74,7 @@ def teams(request):
         "teams/teams.html",
         {
             "locales": locales,
-            "all_locales_stats": TranslatedResource.objects.current().string_stats(),
+            "all_locales_stats": TranslatedResource.objects.string_stats(),
             "locale_stats": locale_stats,
             "form": form,
             "top_instances": get_top_instances(locales, locale_stats),
@@ -92,10 +92,8 @@ def team(request, locale):
     if not visible_count:
         raise Http404
 
-    locale_stats = (
-        TranslatedResource.objects.current()
-        .filter(locale=locale)
-        .string_stats(request.user)
+    locale_stats = TranslatedResource.objects.filter(locale=locale).string_stats(
+        request.user
     )
 
     return render(

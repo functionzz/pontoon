@@ -11,7 +11,7 @@ def update_terminology_project_stats():
         resource=resource, obsolete=False
     ).count()
     resource.save(update_fields=["total_strings"])
-    TranslatedResource.objects.current().filter(resource=resource).calculate_stats()
+    TranslatedResource.objects.filter(resource=resource).calculate_stats()
 
 
 class TermQuerySet(models.QuerySet):

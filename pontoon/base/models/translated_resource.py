@@ -14,9 +14,6 @@ log = logging.getLogger(__name__)
 
 
 class TranslatedResourceQuerySet(models.QuerySet):
-    def current(self):
-        return self.filter(resource__obsolete=False)
-
     def string_stats(
         self,
         user: User | None = None,
