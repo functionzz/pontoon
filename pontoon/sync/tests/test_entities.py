@@ -83,7 +83,7 @@ def test_resource_obsoletion():
             translated.resource.path for translated in TranslatedResource.objects.all()
         } == {"a.ftl", "b.po", "c.ftl", "common", "playground"}
 
-        # Paths setup
+        # Paths setup for resource obsoletion
         mock_checkout = Mock(
             Checkout,
             path=repo.checkout_path,
@@ -118,6 +118,83 @@ def test_resource_obsoletion():
             ).count()
             == 3
         )
+
+
+@pytest.mark.django_db
+def test_resource_deobsoletion():
+    with TemporaryDirectory() as root:
+        # Database setup
+        settings.MEDIA_ROOT = root
+        locale = LocaleFactory.create(code="fr-Test")
+        locale_map = {locale.code: locale}
+        repo = RepositoryFactory(url="http://example.com/repo")
+        project = ProjectFactory.create(
+            name="test-add", locales=[locale], repositories=[repo]
+        )
+        ResourceFactory.create(project=project, path="a.ftl", format="fluent")
+        ResourceFactory.create(project=project, path="b.po", format="gettext")
+        res_c = ResourceFactory.create(
+            project=project, path="c.ftl", format="fluent", obsolete=True
+        )
+        EntityFactory.create(
+            resource=res_c, key=["key-4"], string="key-4 = Message 4", obsolete=True
+        )
+        EntityFactory.create(
+            resource=res_c, key=["key-5"], string="key-5 = Message 5", obsolete=True
+        )
+        EntityFactory.create(
+            resource=res_c, key=["key-6"], string="key-6 = Message 6", obsolete=True
+        )
+
+        # Filesystem setup
+        c_ftl = dedent(
+            """
+            key-1 = Message 1
+            key-2 = Message 2
+            key-3 = Message 3
+            """
+        )
+        makedirs(repo.checkout_path)
+        build_file_tree(
+            repo.checkout_path,
+            {
+                "en-US": {"a.ftl": "", "b.pot": "", "c.ftl": c_ftl},
+                "fr-Test": {"a.ftl": "", "b.po": ""},
+            },
+        )
+
+        # Paths setup
+        mock_checkout = Mock(
+            Checkout,
+            path=repo.checkout_path,
+            changed=[join("en-US", "c.ftl")],
+            removed=[],
+            renamed=[],
+        )
+        paths = find_paths(project, Checkouts(mock_checkout, mock_checkout))
+
+        # Test
+        assert sync_resources_from_repo(
+            project, locale_map, mock_checkout, paths, now
+        ) == (3, {"c.ftl"}, set())
+
+        res_c = project.resources.get(path="c.ftl")
+
+        # resource de-obsoleted
+        assert not res_c.obsolete
+
+        # TODO Entities should also be de-obsoleted
+        assert set(
+            (tuple(ent.key), ent.obsolete)
+            for ent in Entity.objects.filter(resource=res_c)
+        ) == {
+            (("key-1",), False),
+            (("key-2",), False),
+            (("key-3",), False),
+            (("key-4",), True),
+            (("key-5",), True),
+            (("key-6",), True),
+        }
 
 
 @pytest.mark.django_db
