@@ -16,6 +16,7 @@ from pontoon.base.models import (
 )
 from pontoon.test.factories import (
     EntityFactory,
+    ProjectLocaleFactory,
     SectionFactory,
     TeamCommentFactory,
     TermFactory,
@@ -602,6 +603,7 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
         )
         for i, x in enumerate(["abaa", "aBaf", "aaAb", "aAab"])
     ]
+    ProjectLocaleFactory.create(project=project_a, locale=locale_a)
     TranslationMemoryFactory.create(
         entity=entities[0],
         source=entities[0].string,
@@ -627,15 +629,13 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
             {
                 "source": "aBaf",
                 "target": "cCDd",
-                "tm_entries": [
+                "projects": [
                     {
                         "project_name": "Project A",
                         "project_slug": "project_a",
-                        "project_disabled": False,
-                        "project_locale_exists": False,
-                        "entities": [entities[1].id],
                     }
                 ],
+                "entities": [entities[1].id],
             }
         ],
         "has_next": False,
@@ -651,15 +651,13 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
             {
                 "source": "abaa",
                 "target": "ccc",
-                "tm_entries": [
+                "projects": [
                     {
                         "project_name": "Project A",
                         "project_slug": "project_a",
-                        "project_disabled": False,
-                        "project_locale_exists": False,
-                        "entities": [entities[0].id],
                     }
                 ],
+                "entities": [entities[0].id],
             }
         ],
         "has_next": False,
@@ -679,6 +677,8 @@ def test_view_concordance_search_multiple_project_names(
         )
         for i, x in enumerate(["abaa", "abaf"])
     ]
+    ProjectLocaleFactory.create(project=project_a, locale=locale_a)
+    ProjectLocaleFactory.create(project=project_b, locale=locale_a)
     TranslationMemoryFactory.create(
         entity=entities[1],
         source=entities[1].string,
@@ -717,35 +717,28 @@ def test_view_concordance_search_multiple_project_names(
             {
                 "source": "abaa",
                 "target": "ccc",
-                "tm_entries": [
+                "projects": [
                     {
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
-                        "project_disabled": project_a.disabled,
-                        "project_locale_exists": False,
-                        "entities": [entities[0].id],
                     },
                     {
                         "project_name": project_b.name,
                         "project_slug": project_b.slug,
-                        "project_disabled": project_b.disabled,
-                        "project_locale_exists": False,
-                        "entities": [entities[0].id],
                     },
                 ],
+                "entities": [entities[0].id],
             },
             {
                 "source": "abaf",
                 "target": "ccc",
-                "tm_entries": [
+                "projects": [
                     {
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
-                        "project_disabled": project_a.disabled,
-                        "project_locale_exists": False,
-                        "entities": [entities[1].id],
                     }
                 ],
+                "entities": [entities[1].id],
             },
         ],
         "has_next": False,
@@ -765,6 +758,7 @@ def test_view_concordance_search_remove_duplicates(
         )
         for i, x in enumerate(["abaa", "abaf"])
     ]
+    ProjectLocaleFactory.create(project=project_a, locale=locale_a)
     TranslationMemoryFactory.create(
         entity=entities[0],
         source=entities[0].string,
@@ -806,41 +800,35 @@ def test_view_concordance_search_remove_duplicates(
             {
                 "source": "abaa",
                 "target": "ccc",
-                "tm_entries": [
+                "projects": [
                     {
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
-                        "project_disabled": project_a.disabled,
-                        "project_locale_exists": False,
-                        "entities": [entities[0].id],
                     }
                 ],
+                "entities": [entities[0].id],
             },
             {
                 "source": "abaf",
                 "target": "ccc",
-                "tm_entries": [
+                "projects": [
                     {
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
-                        "project_disabled": project_a.disabled,
-                        "project_locale_exists": False,
-                        "entities": [entities[1].id],
                     }
                 ],
+                "entities": [entities[1].id],
             },
             {
                 "source": "abaf",
                 "target": "cccbbb",
-                "tm_entries": [
+                "projects": [
                     {
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
-                        "project_disabled": project_a.disabled,
-                        "project_locale_exists": False,
-                        "entities": [entities[1].id],
                     }
                 ],
+                "entities": [entities[1].id],
             },
         ],
         "has_next": False,
@@ -872,6 +860,8 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
         EntityFactory(resource=resource_a, string=x, order=i)
         for i, x in enumerate(["abaa", "abaf"])
     ]
+    ProjectLocaleFactory.create(project=project_a, locale=locale_a)
+
     TranslationMemoryFactory.create(
         entity=entities[0],
         source=entities[0].string,
@@ -905,15 +895,13 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
             {
                 "source": "abaa",
                 "target": "ccc",
-                "tm_entries": [
+                "projects": [
                     {
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
-                        "project_disabled": project_a.disabled,
-                        "project_locale_exists": False,
-                        "entities": [entities[0].id],
                     }
                 ],
+                "entities": [entities[0].id],
             },
         ],
         "has_next": True,
@@ -929,15 +917,13 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
             {
                 "source": "abaf",
                 "target": "cccbbb",
-                "tm_entries": [
+                "projects": [
                     {
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
-                        "project_disabled": project_a.disabled,
-                        "project_locale_exists": False,
-                        "entities": [entities[1].id],
                     }
                 ],
+                "entities": [entities[1].id],
             },
         ],
         "has_next": False,
@@ -968,6 +954,7 @@ def test_view_concordance_search_null_project_exclusion(
         for i, x in enumerate(["abaa", "abaf"])
     ]
 
+    ProjectLocaleFactory.create(project=project_a, locale=locale_a)
     TranslationMemoryFactory.create(
         entity=entities[0],
         source=entities[0].string,
@@ -994,15 +981,13 @@ def test_view_concordance_search_null_project_exclusion(
             {
                 "source": "abaf",
                 "target": "cccbbb",
-                "tm_entries": [
+                "projects": [
                     {
                         "project_name": project_a.name,
                         "project_slug": project_a.slug,
-                        "project_disabled": project_a.disabled,
-                        "project_locale_exists": False,
-                        "entities": [entities[1].id],
                     }
                 ],
+                "entities": [entities[1].id],
             },
         ],
         "has_next": False,

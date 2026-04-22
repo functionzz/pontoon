@@ -23,14 +23,11 @@ export type MachineryTranslation = {
   original: string;
   translation: string;
   quality?: number;
-  tmEntries?: {
+  projects?: {
     projectName: string;
     projectSlug: string;
-    projectDisabled: boolean;
-    projectLocaleExists: boolean;
-    entities: number[];
   }[];
-  projectNames?: Array<string | null>;
+  entities?: number[];
 };
 
 type ConcordanceTranslations = {
@@ -73,13 +70,11 @@ export async function fetchConcordanceResults(
     results: Array<{
       source: string;
       target: string;
-      tm_entries: {
+      projects: {
         project_name: string;
         project_slug: string;
-        project_disabled: boolean;
-        project_locale_exists: boolean;
-        entities: number[];
       }[];
+      entities: number[];
     }>;
     has_next: boolean;
   };
@@ -90,13 +85,11 @@ export async function fetchConcordanceResults(
           sources: ['concordance-search'],
           original: item.source,
           translation: item.target,
-          tmEntries: item.tm_entries.map((entry) => ({
+          projects: item.projects.map((entry) => ({
             projectName: entry.project_name,
             projectSlug: entry.project_slug,
-            projectDisabled: entry.project_disabled,
-            projectLocaleExists: entry.project_locale_exists,
-            entities: entry.entities,
           })),
+          entities: item.entities,
         })),
         hasMore: has_next,
       }

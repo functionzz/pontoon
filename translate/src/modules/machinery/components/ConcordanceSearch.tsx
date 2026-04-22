@@ -11,40 +11,23 @@ type Props = {
   translation: MachineryTranslation;
 };
 
-type tmEntry = {
+type project = {
   projectName: string;
   projectSlug: string;
-  projectDisabled: boolean;
-  projectLocaleExists: boolean;
-  entities: number[];
 };
 
-function ProjectList({ tmEntries }: { tmEntries: tmEntry[] }) {
-  const { code } = useContext(Locale);
-
-  if (tmEntries.length === 0) {
+function ProjectList({ projects }: { projects: project[] }) {
+  if (projects.length === 0) {
     return <TranslationMemory />;
   }
 
   return (
     <>
-      {tmEntries.map((tmEntry) => (
-        <li key={tmEntry.projectName}>
-          {tmEntry.entities.length > 0 &&
-          !tmEntry.projectDisabled &&
-          tmEntry.projectLocaleExists ? (
-            <a
-              className='translation-source'
-              href={`/${code}/${tmEntry.projectSlug}/all-resources/?list=${tmEntry.entities.join(',')}`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span>{tmEntry.projectName.toUpperCase()}</span>
-            </a>
-          ) : (
-            <span className='translation-source'>
-              <span>{tmEntry.projectName.toUpperCase()}</span>
-            </span>
-          )}
+      {projects.map((project) => (
+        <li key={project.projectName}>
+          <span className='translation-source'>
+            <span>{project.projectName.toUpperCase()}</span>
+          </span>
         </li>
       ))}
     </>
@@ -56,21 +39,30 @@ export function ConcordanceSearch({
   translation,
 }: Props): React.ReactElement {
   const { code, direction, script } = useContext(Locale);
-  const tmEntries = translation.tmEntries;
+  const projects = translation.projects;
+  const entities = translation.entities;
 
-  const title = tmEntries
-    ?.reduce((acc, entry) => {
-      acc.push(entry.projectName);
-      return acc;
-    }, [] as string[])
-    .join(' • ');
+  const title = projects?.map((project) => project.projectName).join(' • ');
+
+  const projectListContainer = (
+    <ul className='sources projects' title={title}>
+      {projects && <ProjectList projects={projects} />}
+    </ul>
+  );
 
   return (
     <>
       <header>
-        <ul className='sources projects' title={title}>
-          {tmEntries && <ProjectList tmEntries={tmEntries} />}
-        </ul>
+        {entities && entities.length > 0 ? (
+          <a
+            href={`/${code}/all-projects/all-resources/?list=${entities.join(',')}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {projectListContainer}
+          </a>
+        ) : (
+          <div>{projectListContainer}</div>
+        )}
       </header>
       <p className='original'>
         <GenericTranslation

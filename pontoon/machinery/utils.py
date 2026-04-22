@@ -18,10 +18,10 @@ from google.oauth2 import service_account
 from rapidfuzz.distance.Indel import normalized_distance
 
 from django.conf import settings
-from django.contrib.postgres.aggregates import JSONBAgg
+from django.contrib.postgres.aggregates import ArrayAgg, JSONBAgg
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
-from django.db.models import BooleanField, Case, Q, When
+from django.db.models import Q
 from django.db.models.functions import JSONObject
 
 import pontoon.base as base
@@ -289,48 +289,24 @@ def get_concordance_search_data(user, text, locale):
         TranslationMemoryEntry.objects.filter(search_query, project__in=projects)
         .values("source", "target")
         .annotate(
-            tm_entries=JSONBAgg(
+            projects=JSONBAgg(
                 JSONObject(
                     project_name="project__name",
                     project_slug="project__slug",
-                    project_disabled="project__disabled",
-                    project_locale_exists=Case(
-                        When(project__id__in=pl_project_ids, then=True),
-                        default=False,
-                        output_field=BooleanField(),
-                    ),
-                    entity="entity",
                 ),
                 distinct=True,
-            )
+            ),
+            entities=ArrayAgg(
+                "entity",
+                filter=Q(
+                    entity__isnull=False,
+                    project__disabled=False,
+                    project__id__in=pl_project_ids,
+                ),
+                distinct=True,
+            ),
         )
     )
-
-    for result in search_results:
-        grouped = defaultdict(list)
-
-        for entry in result["tm_entries"]:
-            key = (
-                entry["project_name"],
-                entry["project_slug"],
-                entry["project_disabled"],
-                entry["project_locale_exists"],
-            )
-            if entry["project_slug"] and entry["entity"]:
-                grouped[key].append(entry["entity"])
-            elif entry["project_slug"]:
-                grouped.setdefault(key, [])
-
-        result["tm_entries"] = [
-            {
-                "project_name": k[0],
-                "project_slug": k[1],
-                "project_disabled": k[2],
-                "project_locale_exists": k[3],
-                "entities": entities,
-            }
-            for k, entities in grouped.items()
-        ]
 
     def sort_by_quality(entity):
         """Sort the results by their best Levenshtein distance from the search query"""
@@ -343,7 +319,7 @@ def get_concordance_search_data(user, text, locale):
                 levenshtein_distance(text, entity["target"]),
                 levenshtein_distance(text, entity["source"]),
             ),
-            len(entity["tm_entries"]),
+            len(entity["projects"]),
         )
 
     return sorted(search_results, key=sort_by_quality, reverse=True)
