@@ -71,6 +71,7 @@ $(function () {
     tab.parents('li').addClass('active');
 
     container.empty();
+
     if (!url.startsWith('/bugs/')) {
       inProgress = $.ajax({
         url: '/' + urlSplit + '/ajax' + url,
