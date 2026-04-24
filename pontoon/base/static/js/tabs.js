@@ -63,16 +63,15 @@ $(function () {
       inProgress.abort();
     }
 
-    const url = '/' + path.split('/' + urlSplit + '/')[1],
-      tab = $('#middle .links a[href="' + path.split('?')[0] + '"]');
+    const url = '/' + path.split('/' + urlSplit + '/')[1];
+    const tab = $('#middle .links a[href="' + path.split('?')[0] + '"]');
 
     // Update menu
     $('#middle .links li').removeClass('active');
     tab.parents('li').addClass('active');
 
     container.empty();
-
-    if (url !== '/bugs/') {
+    if (!url.startsWith('/bugs/')) {
       inProgress = $.ajax({
         url: '/' + urlSplit + '/ajax' + url,
         success: function (data) {
