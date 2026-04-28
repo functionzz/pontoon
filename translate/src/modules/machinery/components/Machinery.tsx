@@ -71,27 +71,30 @@ export function Machinery(): React.ReactElement<'section'> {
         </form>
       </div>
       <div className='list-wrapper' ref={rootRef}>
-        <ul>
-          {translations.map((translation, index) => (
-            <MachineryTranslationComponent
-              index={index}
-              sourceString={source}
-              translation={translation}
-              key={index}
-            />
-          ))}
-        </ul>
+        {results.length === 0 ? (
+          <ul>
+            {translations.map((translation, index) => (
+              <MachineryTranslationComponent
+                index={index}
+                sourceString={source}
+                translation={translation}
+                key={index}
+              />
+            ))}
+          </ul>
+        ) : (
+          <ul>
+            {results.map((result, index) => (
+              <MachineryTranslationComponent
+                index={index + translations.length}
+                sourceString={query}
+                translation={result}
+                key={index + translations.length}
+              />
+            ))}
+          </ul>
+        )}
         {machineryFetching && <MachinerySkeletonLoader items={[]} />}
-        <ul>
-          {results.map((result, index) => (
-            <MachineryTranslationComponent
-              index={index + translations.length}
-              sourceString={query}
-              translation={result}
-              key={index + translations.length}
-            />
-          ))}
-        </ul>
         {(fetching || hasMore) && (
           <MachinerySkeletonLoader items={results} sentryRef={sentryRef} />
         )}

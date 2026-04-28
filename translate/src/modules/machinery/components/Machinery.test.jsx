@@ -62,15 +62,12 @@ describe('<Machinery>', () => {
         { original: '3', sources: [] },
       ],
       {
-        results: [
-          { original: '4', sources: [] },
-          { original: '5', sources: [] },
-        ],
+        results: [],
       },
     );
 
-    expect(getAllByRole('listitem')).toHaveLength(5);
-    expect(getAllByTitle(copyListItemTitle)).toHaveLength(5);
+    expect(getAllByRole('listitem')).toHaveLength(3);
+    expect(getAllByTitle(copyListItemTitle)).toHaveLength(3);
   });
 
   it('renders a reset button if a search query is present', () => {
