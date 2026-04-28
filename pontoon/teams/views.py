@@ -131,16 +131,20 @@ def ajax_projects(request, locale):
         .annotate(project_id=F("entity__resource__project__id"))
     }
 
-    managers = locale.managers_group.user_set.exists()
-    translations = Translation.objects.filter(
-        user=request.user, locale=locale, approved=True
-    ).exists()
+    user_can_request_projects = request.user.is_authenticated and (
+        not locale.managers_group.user_set.exists()
+        or Translation.objects.filter(
+            user=request.user,
+            locale=locale,
+            approved=True,
+        ).exists()
+    )
 
     projects_to_request = (
         projects.exclude(locales=locale)
         .filter(can_be_requested=True)
         .annotate(enabled_locales=Count("project_locale", distinct=True))
-        if request.user.is_authenticated and (not managers or translations)
+        if user_can_request_projects
         else []
     )
 
