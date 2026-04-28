@@ -631,8 +631,8 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
                 "target": "cCDd",
                 "projects": [
                     {
-                        "project_name": "Project A",
-                        "project_slug": "project_a",
+                        "name": "Project A",
+                        "slug": "project_a",
                     }
                 ],
                 "entities": [entities[1].id],
@@ -653,8 +653,8 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
                 "target": "ccc",
                 "projects": [
                     {
-                        "project_name": "Project A",
-                        "project_slug": "project_a",
+                        "name": "Project A",
+                        "slug": "project_a",
                     }
                 ],
                 "entities": [entities[0].id],
@@ -665,7 +665,7 @@ def test_view_concordance_search(client, project_a, locale_a, resource_a):
 
 
 @pytest.mark.django_db
-def test_view_concordance_search_multiple_project_names(
+def test_view_concordance_search_multiple_names(
     client, project_a, project_b, locale_a, locale_b, resource_a
 ):
     """Check Concordance search doesn't produce duplicated search results."""
@@ -719,12 +719,12 @@ def test_view_concordance_search_multiple_project_names(
                 "target": "ccc",
                 "projects": [
                     {
-                        "project_name": project_a.name,
-                        "project_slug": project_a.slug,
+                        "name": project_a.name,
+                        "slug": project_a.slug,
                     },
                     {
-                        "project_name": project_b.name,
-                        "project_slug": project_b.slug,
+                        "name": project_b.name,
+                        "slug": project_b.slug,
                     },
                 ],
                 "entities": [entities[0].id],
@@ -734,8 +734,8 @@ def test_view_concordance_search_multiple_project_names(
                 "target": "ccc",
                 "projects": [
                     {
-                        "project_name": project_a.name,
-                        "project_slug": project_a.slug,
+                        "name": project_a.name,
+                        "slug": project_a.slug,
                     }
                 ],
                 "entities": [entities[1].id],
@@ -802,8 +802,8 @@ def test_view_concordance_search_remove_duplicates(
                 "target": "ccc",
                 "projects": [
                     {
-                        "project_name": project_a.name,
-                        "project_slug": project_a.slug,
+                        "name": project_a.name,
+                        "slug": project_a.slug,
                     }
                 ],
                 "entities": [entities[0].id],
@@ -813,8 +813,8 @@ def test_view_concordance_search_remove_duplicates(
                 "target": "ccc",
                 "projects": [
                     {
-                        "project_name": project_a.name,
-                        "project_slug": project_a.slug,
+                        "name": project_a.name,
+                        "slug": project_a.slug,
                     }
                 ],
                 "entities": [entities[1].id],
@@ -824,8 +824,8 @@ def test_view_concordance_search_remove_duplicates(
                 "target": "cccbbb",
                 "projects": [
                     {
-                        "project_name": project_a.name,
-                        "project_slug": project_a.slug,
+                        "name": project_a.name,
+                        "slug": project_a.slug,
                     }
                 ],
                 "entities": [entities[1].id],
@@ -897,8 +897,8 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
                 "target": "ccc",
                 "projects": [
                     {
-                        "project_name": project_a.name,
-                        "project_slug": project_a.slug,
+                        "name": project_a.name,
+                        "slug": project_a.slug,
                     }
                 ],
                 "entities": [entities[0].id],
@@ -919,8 +919,8 @@ def test_view_concordance_search_pagination(client, project_a, locale_a, resourc
                 "target": "cccbbb",
                 "projects": [
                     {
-                        "project_name": project_a.name,
-                        "project_slug": project_a.slug,
+                        "name": project_a.name,
+                        "slug": project_a.slug,
                     }
                 ],
                 "entities": [entities[1].id],
@@ -983,8 +983,8 @@ def test_view_concordance_search_null_project_exclusion(
                 "target": "cccbbb",
                 "projects": [
                     {
-                        "project_name": project_a.name,
-                        "project_slug": project_a.slug,
+                        "name": project_a.name,
+                        "slug": project_a.slug,
                     }
                 ],
                 "entities": [entities[1].id],
