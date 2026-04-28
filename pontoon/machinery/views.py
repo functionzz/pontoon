@@ -104,7 +104,7 @@ def concordance_search(request):
     for result in data.object_list:
         result["projects"] = sorted(
             result["projects"],
-            key=lambda x: project_order.get(x["project_name"], float("inf")),
+            key=lambda x: project_order.get(x["name"], float("inf")),
         )
 
     return JsonResponse(

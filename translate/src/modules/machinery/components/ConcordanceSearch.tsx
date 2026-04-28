@@ -12,8 +12,8 @@ type Props = {
 };
 
 type project = {
-  projectName: string;
-  projectSlug: string;
+  name: string;
+  slug: string;
 };
 
 function ProjectList({ projects }: { projects: project[] }) {
@@ -24,9 +24,9 @@ function ProjectList({ projects }: { projects: project[] }) {
   return (
     <>
       {projects.map((project) => (
-        <li key={project.projectName}>
+        <li key={project.name}>
           <span className='translation-source'>
-            <span>{project.projectName.toUpperCase()}</span>
+            <span>{project.name.toUpperCase()}</span>
           </span>
         </li>
       ))}
@@ -42,7 +42,7 @@ export function ConcordanceSearch({
   const projects = translation.projects;
   const entities = translation.entities;
 
-  const title = projects?.map((project) => project.projectName).join(' • ');
+  const title = projects?.map((project) => project.name).join(' • ');
 
   const projectListContainer = (
     <ul className='sources projects' title={title}>

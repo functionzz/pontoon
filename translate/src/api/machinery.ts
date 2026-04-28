@@ -24,8 +24,8 @@ export type MachineryTranslation = {
   translation: string;
   quality?: number;
   projects?: {
-    projectName: string;
-    projectSlug: string;
+    name: string;
+    slug: string;
   }[];
   entities?: number[];
 };
@@ -71,8 +71,8 @@ export async function fetchConcordanceResults(
       source: string;
       target: string;
       projects: {
-        project_name: string;
-        project_slug: string;
+        name: string;
+        slug: string;
       }[];
       entities: number[];
     }>;
@@ -86,8 +86,8 @@ export async function fetchConcordanceResults(
           original: item.source,
           translation: item.target,
           projects: item.projects.map((entry) => ({
-            projectName: entry.project_name,
-            projectSlug: entry.project_slug,
+            name: entry.name,
+            slug: entry.slug,
           })),
           entities: item.entities,
         })),

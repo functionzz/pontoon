@@ -291,8 +291,8 @@ def get_concordance_search_data(user, text, locale):
         .annotate(
             projects=JSONBAgg(
                 JSONObject(
-                    project_name="project__name",
-                    project_slug="project__slug",
+                    name="project__name",
+                    slug="project__slug",
                 ),
                 distinct=True,
             ),
