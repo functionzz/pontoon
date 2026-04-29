@@ -24,12 +24,9 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db.models import Q
 from django.db.models.functions import JSONObject
 
-import pontoon.base as base
-
-from pontoon.base.models.project import Project
-from pontoon.base.models.project_locale import ProjectLocale
-from pontoon.base.models.translation_memory import TranslationMemoryEntry
+from pontoon.base.models import Locale, Project, ProjectLocale, TranslationMemoryEntry
 from pontoon.base.placeables import get_placeables
+from pontoon.base.utils import get_search_phrases
 
 
 log = logging.getLogger(__name__)
