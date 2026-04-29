@@ -17,8 +17,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.html import strip_tags
 from django.views.decorators.http import require_POST
 
-from pontoon.base.models import Comment, Entity, Locale, Translation
-from pontoon.base.models.project import Project
+from pontoon.base.models import Comment, Entity, Locale, Project, Translation
 from pontoon.machinery.utils import (
     get_concordance_search_data,
     get_google_translate_data,

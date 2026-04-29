@@ -239,7 +239,7 @@ def get_existing_terms(url, headers):
 
 def store_new_terms(url, headers, new_terms):
     locale_codes = ["en"] + sorted(
-        base.models.Locale.objects.exclude(google_translate_code__in=["en", ""])
+        Locale.objects.exclude(google_translate_code__in=["en", ""])
         .order_by()  # Clear default ordering on the Locale model
         .values_list("google_translate_code", flat=True)
         .distinct()
@@ -266,7 +266,7 @@ def store_new_terms(url, headers, new_terms):
 
 
 def get_concordance_search_data(user, text, locale):
-    search_phrases = base.utils.get_search_phrases(text)
+    search_phrases = get_search_phrases(text)
     search_filters = (
         Q(
             Q(target__icontains_collate=(phrase, locale.db_collation))
