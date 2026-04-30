@@ -5,7 +5,16 @@ import pytest
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from pontoon.test.factories import UserFactory
+from pontoon.base.models.translation import Translation
+from pontoon.test.factories import (
+    EntityFactory,
+    LocaleFactory,
+    ProjectFactory,
+    ProjectLocaleFactory,
+    ResourceFactory,
+    TranslationFactory,
+    UserFactory,
+)
 
 
 def _get_sorted_users():
@@ -203,3 +212,68 @@ def test_locale_top_contributors(mock_render, client, translation_a, locale_b):
     response_context = mock_render.call_args[0][0]
     assert response_context["locale"] == locale_b
     assert list(response_context["contributors"]) == []
+
+
+@pytest.mark.django_db
+def test_ajax_projects_request_more_projects_button_visibility(
+    member,
+    managers,
+):
+    locale_a = LocaleFactory.create(code="thl", name="Klingon")
+    project_a = ProjectFactory.create(
+        name="Project A", slug="project-a", can_be_requested=False
+    )
+    project_b = ProjectFactory.create(
+        name="Project B", slug="project-b", can_be_requested=True
+    )
+    ProjectLocaleFactory.create(project=project_a, locale=locale_a)
+
+    resource_a = ResourceFactory.create(project=project_a)
+    ResourceFactory.create(project=project_b)
+
+    entity_a = EntityFactory.create(resource=resource_a)
+
+    locale_a.managers_group.user_set.add(*managers)
+
+    response = member.client.get(
+        f"/{locale_a.code}/ajax/",
+        HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+    )
+
+    user_can_request_projects = member.user.is_authenticated and (
+        not locale_a.managers_group.user_set.exists()
+        or Translation.objects.filter(
+            user=member.user,
+            locale=locale_a,
+            approved=True,
+        ).exists()
+    )
+
+    print("user can request projects: ", user_can_request_projects)
+
+    assert response.status_code == 200
+    assert b"request-projects" not in response.content
+
+    for manager in managers:
+        locale_a.managers_group.user_set.remove(manager)
+
+    response = member.client.get(
+        f"/{locale_a.code}/ajax/",
+        HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+    )
+
+    assert response.status_code == 200
+    assert b"request-projects" in response.content
+
+    locale_a.managers_group.user_set.add(*managers)
+    TranslationFactory.create(
+        entity=entity_a, locale=locale_a, user=member.user, approved=True
+    )
+
+    response = member.client.get(
+        f"/{locale_a.code}/ajax/",
+        HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+    )
+
+    assert response.status_code == 200
+    assert b"request-projects" in response.content
