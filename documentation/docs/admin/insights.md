@@ -1,0 +1,35 @@
+# Insights
+
+Pontoon provides a global **Insights** dashboard for analyzing the health of localization communities and the quality of pretranslations across all locales and projects.
+
+The dashboard is restricted to staff and is available at [https://pontoon.mozilla.org/insights/](https://pontoon.mozilla.org/insights/) when logged in as an administrator.
+
+## Community health activity
+
+This section presents a table of the monthly `Community health score` and its underlying metrics for each selected locale. For every team it shows the number of managers, translators, active contributors, all contributors and new signups, along with the number of enabled projects, project completion, and the resulting `Community health score`.
+
+Each cell also displays the month-over-month change, making it possible to compare the current values against the previous month. Use the `Filter teams` search box to narrow the table down to specific locales.
+
+### Edit configuration
+
+The `Edit Configuration` button opens a page where you select which locales are displayed in the dashboard and its charts. Move one or more locales into the target list and click `Save Configuration`. If no locales are selected, the dashboard prompts you to choose at least one before any data is shown.
+
+### Show scores
+
+By default the table shows the raw value of each metric. Click the `Show scores` button to switch to the score view, which instead displays the individual component scores that add up to the `Community health score`. Click the button again (now labeled `Show default`) to return to the raw values.
+
+## Community health score chart
+
+This chart plots the monthly `Community health scores` of all selected locales for the most recent 12 months, along with the 12-month average. Hover over a data point in the graph to see all selected locale scores for that month along with the 12-month average.
+
+## Pretranslation quality
+
+Two charts track the quality of [pretranslations](../localizer/glossary.md#pretranslation) over time, measured as the approval rate of pretranslated strings (the share of pretranslations that reviewers approve rather than reject).
+
+### Team pretranslation quality
+
+Plots the approval rate of pretranslations for each team, making it possible to compare pretranslation quality across locales and spot teams whose custom machine translation models may need attention.
+
+### Project pretranslation quality
+
+Plots the approval rate of pretranslations for each project, highlighting which projects produce the most and least reliable pretranslations.
