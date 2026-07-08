@@ -10,9 +10,9 @@ This section presents a table of the monthly `Community health score` and its un
 
 Each cell also displays the month-over-month change, making it possible to compare the current values against the previous month. Use the `Filter teams` search box to narrow the table down to specific locales.
 
-### Edit configuration
+### Edit locales
 
-The `Edit Configuration` button opens a page where you select which locales are displayed in the dashboard and its charts. Move one or more locales into the target list and click `Save Configuration`. If no locales are selected, the dashboard prompts you to choose at least one before any data is shown.
+The `Edit Locales` button toggles a view where the user selects which locales are displayed in the dashboard and its charts. Move one or more locales into the target list to save preferred locales for display. If no locales are selected, the dashboard prompts the user to choose at least one before any data is shown. Press `Back` to toggle back to the dashboard view.
 
 ### Show scores
 
