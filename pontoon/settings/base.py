@@ -465,7 +465,6 @@ PIPELINE_CSS = {
             "css/multiple_item_selector.css",
             "css/insights_charts.css",
             "css/insights.css",
-            "css/config.css",
         ),
         "output_filename": "css/insights.min.css",
     },
