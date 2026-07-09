@@ -965,6 +965,7 @@ header .right .select .menu {
 }
 
 #profile .menu li#standalone-sign-out button {
+  flex: 1;
   background: transparent;
   border: none;
   color: inherit;
