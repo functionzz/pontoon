@@ -67,6 +67,8 @@ function saveCommunityHealthLocales(renderTable) {
 }
 
 $(function () {
+  let selectorChange = false;
+
   $('#edit-locales').on('click', function (e) {
     e.preventDefault();
 
@@ -84,16 +86,19 @@ $(function () {
       .toggleClass('fa-chevron-right', !isHidden)
       .toggleClass('fa-chevron-left', isHidden);
 
-    if (!isHidden) {
+    if (!isHidden && selectorChange) {
       saveCommunityHealthLocales(true);
+      selectorChange = false;
     }
   });
 
   $('body').on('click', '.multiple-item-selector .item.select li', function () {
+    selectorChange = true;
     saveCommunityHealthLocales(false);
   });
 
   $('body').on('click', '.multiple-item-selector .move-all', function () {
+    selectorChange = true;
     saveCommunityHealthLocales(false);
   });
 });
