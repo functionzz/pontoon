@@ -30,9 +30,9 @@ urlpatterns = [
                                 name="pontoon.insights.render_table",
                             ),
                         ]
-                    )
+                    ),
                 ),
             ]
-        )
+        ),
     ),
 ]
