@@ -44,63 +44,61 @@ function saveCommunityHealthLocales(renderTable) {
   });
 }
 
-$(function () {
-  let selectorChange = false;
+let selectorChange = false;
 
-  $('#edit-locales').on('click', function (e) {
-    e.preventDefault();
+$('#edit-locales').on('click', function (e) {
+  e.preventDefault();
 
-    const container = $('.community-health-score-container');
-    const localeSelector = $('.community-health-locale-selector');
+  const container = $('.community-health-score-container');
+  const localeSelector = $('.community-health-locale-selector');
 
-    container.toggleClass('hidden');
-    localeSelector.toggleClass('hidden');
+  container.toggleClass('hidden');
+  localeSelector.toggleClass('hidden');
 
-    const isHidden = container.hasClass('hidden');
+  const isHidden = container.hasClass('hidden');
 
-    $('#edit-locales')
-      .toggleClass('back', isHidden)
-      .find('span')
-      .toggleClass('fa-chevron-right', !isHidden)
-      .toggleClass('fa-chevron-left', isHidden);
+  $('#edit-locales')
+    .toggleClass('back', isHidden)
+    .find('span')
+    .toggleClass('fa-chevron-right', !isHidden)
+    .toggleClass('fa-chevron-left', isHidden);
 
-    if (!isHidden && selectorChange) {
-      saveCommunityHealthLocales(true);
-      selectorChange = false;
+  if (!isHidden && selectorChange) {
+    saveCommunityHealthLocales(true);
+    selectorChange = false;
+  }
+});
+
+$('body').on('click', '#show-scores', function (e) {
+  e.stopPropagation();
+
+  const table = $('.community-health-table');
+  table.toggleClass('show-score-view');
+
+  const showScores = table.hasClass('show-score-view');
+
+  // Keep each cells sort key in sync
+  table.find('td.cell').each(function () {
+    const td = $(this);
+    const key = showScores
+      ? td.attr('data-score-sort')
+      : td.attr('data-base-sort');
+    if (key !== undefined) {
+      td.attr('data-sort', key);
     }
   });
 
-  $('body').on('click', '#show-scores', function (e) {
-    e.stopPropagation();
+  $('#show-scores').text(showScores ? 'Show default' : 'Show scores');
+});
 
-    const table = $('.community-health-table');
-    table.toggleClass('show-score-view');
+$('body').on('click', '.multiple-item-selector .item.select li', function () {
+  selectorChange = true;
+  saveCommunityHealthLocales(false);
+});
 
-    const showScores = table.hasClass('show-score-view');
-
-    // Keep each cells sort key in sync
-    table.find('td.cell').each(function () {
-      const td = $(this);
-      const key = showScores
-        ? td.attr('data-score-sort')
-        : td.attr('data-base-sort');
-      if (key !== undefined) {
-        td.attr('data-sort', key);
-      }
-    });
-
-    $('#show-scores').text(showScores ? 'Show default' : 'Show scores');
-  });
-
-  $('body').on('click', '.multiple-item-selector .item.select li', function () {
-    selectorChange = true;
-    saveCommunityHealthLocales(false);
-  });
-
-  $('body').on('click', '.multiple-item-selector .move-all', function () {
-    selectorChange = true;
-    saveCommunityHealthLocales(false);
-  });
+$('body').on('click', '.multiple-item-selector .move-all', function () {
+  selectorChange = true;
+  saveCommunityHealthLocales(false);
 });
 
 // eslint-disable-next-line no-var
