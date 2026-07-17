@@ -1,6 +1,6 @@
 from django.urls import path
 
-from pontoon.insights.views import edit_locales, insights
+from pontoon.insights.views import edit_locales, insights, render_table
 
 
 urlpatterns = [
@@ -12,8 +12,13 @@ urlpatterns = [
     ),
     # Insights config page
     path(
-        "ajax/user/selector/",
+        "insights/ajax/edit-locales/",
         edit_locales,
-        name="pontoon.insights.edit_locale_selector",
+        name="pontoon.insights.edit_locales",
+    ),
+    path(
+        "insights/ajax/render-table/",
+        render_table,
+        name="pontoon.insights.render_table",
     ),
 ]

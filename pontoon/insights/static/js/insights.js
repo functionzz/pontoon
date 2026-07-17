@@ -13,19 +13,31 @@ const longMonthFormat = new Intl.DateTimeFormat('en', {
 
 const style = getComputedStyle(document.body);
 
-function saveCommunityHealthLocales(renderTable) {
+function saveCommunityHealthLocales() {
   const selectedLocales = $('.multiple-item-selector .item.selected')
     .find('input[type=hidden]')
     .val();
 
   $.ajax({
-    url: '/ajax/user/selector/',
+    url: '/insights/ajax/edit-locales/',
     type: 'POST',
     data: {
       csrfmiddlewaretoken: $('body').data('csrf'),
       community_health_locales: selectedLocales,
-      render_table: renderTable ? 'true' : 'false',
     },
+    error(request) {
+      if (request.responseText === 'error') {
+        Pontoon.endLoader('Oops, something went wrong.', 'error');
+      } else {
+        Pontoon.endLoader(request.responseText, 'error');
+      }
+    },
+  });
+}
+
+function renderInsights() {
+  $.ajax({
+    url: '/insights/ajax/render-table/',
     success(response) {
       if (response.html) {
         Chart.getChart('community-health-chart')?.destroy();
@@ -44,61 +56,63 @@ function saveCommunityHealthLocales(renderTable) {
   });
 }
 
-let selectorChange = false;
+$(function () {
+  let selectorChange = false;
 
-$('#edit-locales').on('click', function (e) {
-  e.preventDefault();
+  $('#edit-locales').on('click', function (e) {
+    e.preventDefault();
 
-  const container = $('.community-health-score-container');
-  const localeSelector = $('.community-health-locale-selector');
+    const container = $('.community-health-score-container');
+    const localeSelector = $('.community-health-locale-selector');
 
-  container.toggleClass('hidden');
-  localeSelector.toggleClass('hidden');
+    container.toggleClass('hidden');
+    localeSelector.toggleClass('hidden');
 
-  const isHidden = container.hasClass('hidden');
+    const isHidden = container.hasClass('hidden');
 
-  $('#edit-locales')
-    .toggleClass('back', isHidden)
-    .find('span')
-    .toggleClass('fa-chevron-right', !isHidden)
-    .toggleClass('fa-chevron-left', isHidden);
+    $('#edit-locales')
+      .toggleClass('back', isHidden)
+      .find('span')
+      .toggleClass('fa-chevron-right', !isHidden)
+      .toggleClass('fa-chevron-left', isHidden);
 
-  if (!isHidden && selectorChange) {
-    saveCommunityHealthLocales(true);
-    selectorChange = false;
-  }
-});
-
-$('body').on('click', '#show-scores', function (e) {
-  e.stopPropagation();
-
-  const table = $('.community-health-table');
-  table.toggleClass('show-score-view');
-
-  const showScores = table.hasClass('show-score-view');
-
-  // Keep each cells sort key in sync
-  table.find('td.cell').each(function () {
-    const td = $(this);
-    const key = showScores
-      ? td.attr('data-score-sort')
-      : td.attr('data-base-sort');
-    if (key !== undefined) {
-      td.attr('data-sort', key);
+    if (!isHidden && selectorChange) {
+      renderInsights();
+      selectorChange = false;
     }
   });
 
-  $('#show-scores').text(showScores ? 'Show default' : 'Show scores');
-});
+  $('body').on('click', '#show-scores', function (e) {
+    e.stopPropagation();
 
-$('body').on('click', '.multiple-item-selector .item.select li', function () {
-  selectorChange = true;
-  saveCommunityHealthLocales(false);
-});
+    const table = $('.community-health-table');
+    table.toggleClass('show-score-view');
 
-$('body').on('click', '.multiple-item-selector .move-all', function () {
-  selectorChange = true;
-  saveCommunityHealthLocales(false);
+    const showScores = table.hasClass('show-score-view');
+
+    // Keep each cells sort key in sync
+    table.find('td.cell').each(function () {
+      const td = $(this);
+      const key = showScores
+        ? td.attr('data-score-sort')
+        : td.attr('data-base-sort');
+      if (key !== undefined) {
+        td.attr('data-sort', key);
+      }
+    });
+
+    $('#show-scores').text(showScores ? 'Show default' : 'Show scores');
+  });
+
+  $('body').on('click', '.multiple-item-selector .item.select li', function () {
+    selectorChange = true;
+    saveCommunityHealthLocales();
+  });
+
+  $('body').on('click', '.multiple-item-selector .move-all', function () {
+    selectorChange = true;
+    saveCommunityHealthLocales();
+  });
 });
 
 // eslint-disable-next-line no-var

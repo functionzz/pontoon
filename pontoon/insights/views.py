@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from pontoon.base.models.locale import Locale
+from pontoon.base.utils import require_AJAX
 from pontoon.insights.chs import KEY_PROJECT_SLUGS
 from pontoon.insights.forms import CommunityHealthLocalesForm
 from pontoon.insights.models import LocaleHealthSnapshot
@@ -159,6 +160,7 @@ def _community_health_context(profile):
 @login_required(redirect_field_name="", login_url="/403")
 @require_POST
 @transaction.atomic
+@require_AJAX
 def edit_locales(request):
 
     if not settings.ENABLE_INSIGHTS:
@@ -187,16 +189,29 @@ def edit_locales(request):
             status=400,
         )
 
-    response = {"status": True}
+    return JsonResponse({"status": True})
 
-    if request.POST.get("render_table") == "true":
-        response["html"] = render_to_string(
-            "insights/widgets/community_health_table_template.html",
-            _community_health_context(profile),
-            request,
-        )
 
-    return JsonResponse(response)
+@login_required(redirect_field_name="", login_url="/403")
+@require_AJAX
+def render_table(request):
+
+    if not settings.ENABLE_INSIGHTS:
+        raise ImproperlyConfigured("ENABLE_INSIGHTS variable not set in settings.")
+
+    user = request.user
+    profile = user.profile
+
+    if not user.is_staff:
+        raise PermissionDenied
+
+    html = render_to_string(
+        "insights/widgets/community_health_table_template.html",
+        _community_health_context(profile),
+        request,
+    )
+
+    return JsonResponse({"status": True, "html": html})
 
 
 @login_required(redirect_field_name="", login_url="/403")
