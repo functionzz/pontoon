@@ -1,6 +1,6 @@
 from django.urls import path
 
-from pontoon.insights.views import edit_user_community_health_locale_selector, insights
+from pontoon.insights.views import edit_locales, insights
 
 
 urlpatterns = [
@@ -13,7 +13,7 @@ urlpatterns = [
     # Insights config page
     path(
         "ajax/user/selector/",
-        edit_user_community_health_locale_selector,
+        edit_locales,
         name="pontoon.insights.edit_locale_selector",
     ),
 ]

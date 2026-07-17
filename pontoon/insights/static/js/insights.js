@@ -13,28 +13,6 @@ const longMonthFormat = new Intl.DateTimeFormat('en', {
 
 const style = getComputedStyle(document.body);
 
-$('body').on('click', '#show-scores', function (e) {
-  e.stopPropagation();
-
-  const table = $('.community-health-table');
-  table.toggleClass('show-score-view');
-
-  const showScores = table.hasClass('show-score-view');
-
-  // Keep each cells sort key in sync
-  table.find('td.cell').each(function () {
-    const td = $(this);
-    const key = showScores
-      ? td.attr('data-score-sort')
-      : td.attr('data-base-sort');
-    if (key !== undefined) {
-      td.attr('data-sort', key);
-    }
-  });
-
-  $('#show-scores').text(showScores ? 'Show default' : 'Show scores');
-});
-
 function saveCommunityHealthLocales(renderTable) {
   const selectedLocales = $('.multiple-item-selector .item.selected')
     .find('input[type=hidden]')
@@ -90,6 +68,28 @@ $(function () {
       saveCommunityHealthLocales(true);
       selectorChange = false;
     }
+  });
+
+  $('body').on('click', '#show-scores', function (e) {
+    e.stopPropagation();
+
+    const table = $('.community-health-table');
+    table.toggleClass('show-score-view');
+
+    const showScores = table.hasClass('show-score-view');
+
+    // Keep each cells sort key in sync
+    table.find('td.cell').each(function () {
+      const td = $(this);
+      const key = showScores
+        ? td.attr('data-score-sort')
+        : td.attr('data-base-sort');
+      if (key !== undefined) {
+        td.attr('data-sort', key);
+      }
+    });
+
+    $('#show-scores').text(showScores ? 'Show default' : 'Show scores');
   });
 
   $('body').on('click', '.multiple-item-selector .item.select li', function () {

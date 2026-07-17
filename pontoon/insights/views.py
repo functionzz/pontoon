@@ -159,7 +159,7 @@ def _community_health_context(profile):
 @login_required(redirect_field_name="", login_url="/403")
 @require_POST
 @transaction.atomic
-def edit_user_community_health_locale_selector(request):
+def edit_locales(request):
 
     if not settings.ENABLE_INSIGHTS:
         raise ImproperlyConfigured("ENABLE_INSIGHTS variable not set in settings.")
