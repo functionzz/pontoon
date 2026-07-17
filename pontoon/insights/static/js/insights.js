@@ -35,7 +35,7 @@ function saveCommunityHealthLocales() {
   });
 }
 
-function renderInsights() {
+function renderCommunityHealthPanel() {
   $.ajax({
     url: '/insights/ajax/render-table/',
     success(response) {
@@ -43,7 +43,7 @@ function renderInsights() {
         Chart.getChart('community-health-chart')?.destroy();
         $('.community-health-score-container').html(response.html);
         Pontoon.insights.renderGlobalChart($('#community-health-chart'), 'chs');
-        Pontoon.endLoader('Configuration saved.');
+        Pontoon.endLoader('Locales updated.');
       }
     },
     error(request) {
@@ -56,61 +56,56 @@ function renderInsights() {
   });
 }
 
-$(function () {
-  let selectorChange = false;
+$('#edit-locales').on('click', function (e) {
+  e.preventDefault();
 
-  $('#edit-locales').on('click', function (e) {
-    e.preventDefault();
+  const container = $('.community-health-score-container');
+  const localeSelector = $('.community-health-locale-selector');
 
-    const container = $('.community-health-score-container');
-    const localeSelector = $('.community-health-locale-selector');
+  container.toggleClass('hidden');
+  localeSelector.toggleClass('hidden');
 
-    container.toggleClass('hidden');
-    localeSelector.toggleClass('hidden');
+  const isHidden = container.hasClass('hidden');
 
-    const isHidden = container.hasClass('hidden');
+  $('#edit-locales')
+    .toggleClass('back', isHidden)
+    .find('span')
+    .toggleClass('fa-chevron-right', !isHidden)
+    .toggleClass('fa-chevron-left', isHidden);
 
-    $('#edit-locales')
-      .toggleClass('back', isHidden)
-      .find('span')
-      .toggleClass('fa-chevron-right', !isHidden)
-      .toggleClass('fa-chevron-left', isHidden);
+  if (!isHidden) {
+    renderCommunityHealthPanel();
+  }
+});
 
-    if (!isHidden && selectorChange) {
-      renderInsights();
-      selectorChange = false;
+$('body').on('click', '#show-scores', function (e) {
+  e.stopPropagation();
+
+  const table = $('.community-health-table');
+  table.toggleClass('show-score-view');
+
+  const showScores = table.hasClass('show-score-view');
+
+  // Keep each cells sort key in sync
+  table.find('td.cell').each(function () {
+    const td = $(this);
+    const key = showScores
+      ? td.attr('data-score-sort')
+      : td.attr('data-base-sort');
+    if (key !== undefined) {
+      td.attr('data-sort', key);
     }
   });
 
-  $('body').on('click', '#show-scores', function (e) {
-    e.stopPropagation();
+  $('#show-scores').text(showScores ? 'Show default' : 'Show scores');
+});
 
-    const table = $('.community-health-table');
-    table.toggleClass('show-score-view');
-
-    const showScores = table.hasClass('show-score-view');
-
-    // Keep each cells sort key in sync
-    table.find('td.cell').each(function () {
-      const td = $(this);
-      const key = showScores
-        ? td.attr('data-score-sort')
-        : td.attr('data-base-sort');
-      if (key !== undefined) {
-        td.attr('data-sort', key);
-      }
-    });
-
-    $('#show-scores').text(showScores ? 'Show default' : 'Show scores');
-  });
-
+$(function () {
   $('body').on('click', '.multiple-item-selector .item.select li', function () {
-    selectorChange = true;
     saveCommunityHealthLocales();
   });
 
   $('body').on('click', '.multiple-item-selector .move-all', function () {
-    selectorChange = true;
     saveCommunityHealthLocales();
   });
 });
