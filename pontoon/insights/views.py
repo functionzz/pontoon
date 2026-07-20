@@ -194,7 +194,7 @@ def edit_locales(request):
 
 @login_required(redirect_field_name="", login_url="/403")
 @require_AJAX
-def render_table(request):
+def render_panel(request):
 
     if not settings.ENABLE_INSIGHTS:
         raise ImproperlyConfigured("ENABLE_INSIGHTS variable not set in settings.")

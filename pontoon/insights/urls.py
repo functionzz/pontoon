@@ -1,6 +1,6 @@
 from django.urls import include, path
 
-from pontoon.insights.views import edit_locales, insights, render_table
+from pontoon.insights.views import edit_locales, insights, render_panel
 
 
 urlpatterns = [
@@ -25,9 +25,9 @@ urlpatterns = [
                                 name="pontoon.insights.edit_locales",
                             ),
                             path(
-                                "render-table/",
-                                render_table,
-                                name="pontoon.insights.render_table",
+                                "render-panel/",
+                                render_panel,
+                                name="pontoon.insights.render_panel",
                             ),
                         ]
                     ),

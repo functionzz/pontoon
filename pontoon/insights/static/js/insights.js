@@ -37,13 +37,12 @@ function saveCommunityHealthLocales() {
 
 function renderCommunityHealthPanel() {
   $.ajax({
-    url: '/insights/ajax/render-table/',
+    url: '/insights/ajax/render-panel/',
     success(response) {
       if (response.html) {
         Chart.getChart('community-health-chart')?.destroy();
         $('.community-health-score-container').html(response.html);
         Pontoon.insights.renderGlobalChart($('#community-health-chart'), 'chs');
-        Pontoon.endLoader('Locales updated.');
       }
     },
     error(request) {
