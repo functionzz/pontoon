@@ -13,6 +13,70 @@ const longMonthFormat = new Intl.DateTimeFormat('en', {
 
 const style = getComputedStyle(document.body);
 
+function saveCommunityHealthLocales() {
+  const selectedLocales = $('.multiple-item-selector .item.selected')
+    .find('input[type=hidden]')
+    .val();
+
+  $.ajax({
+    url: '/insights/ajax/edit-locales/',
+    type: 'POST',
+    data: {
+      csrfmiddlewaretoken: $('body').data('csrf'),
+      community_health_locales: selectedLocales,
+    },
+    error(request) {
+      if (request.responseText === 'error') {
+        Pontoon.endLoader('Oops, something went wrong.', 'error');
+      } else {
+        Pontoon.endLoader(request.responseText, 'error');
+      }
+    },
+  });
+}
+
+function renderCommunityHealthPanel() {
+  $.ajax({
+    url: '/insights/ajax/render-panel/',
+    success(response) {
+      if (response.html) {
+        Chart.getChart('community-health-chart')?.destroy();
+        $('.community-health-score-container').html(response.html);
+        Pontoon.insights.renderGlobalChart($('#community-health-chart'), 'chs');
+      }
+    },
+    error(request) {
+      if (request.responseText === 'error') {
+        Pontoon.endLoader('Oops, something went wrong.', 'error');
+      } else {
+        Pontoon.endLoader(request.responseText, 'error');
+      }
+    },
+  });
+}
+
+$('#edit-locales').on('click', function (e) {
+  e.preventDefault();
+
+  const container = $('.community-health-score-container');
+  const localeSelector = $('.community-health-locale-selector');
+
+  container.toggleClass('hidden');
+  localeSelector.toggleClass('hidden');
+
+  const isHidden = container.hasClass('hidden');
+
+  $('#edit-locales')
+    .toggleClass('back', isHidden)
+    .find('span')
+    .toggleClass('fa-chevron-right', !isHidden)
+    .toggleClass('fa-chevron-left', isHidden);
+
+  if (!isHidden) {
+    renderCommunityHealthPanel();
+  }
+});
+
 $('body').on('click', '#show-scores', function (e) {
   e.stopPropagation();
 
@@ -33,6 +97,16 @@ $('body').on('click', '#show-scores', function (e) {
   });
 
   $('#show-scores').text(showScores ? 'Show default' : 'Show scores');
+});
+
+$(function () {
+  $('body').on('click', '.multiple-item-selector .item.select li', function () {
+    saveCommunityHealthLocales();
+  });
+
+  $('body').on('click', '.multiple-item-selector .move-all', function () {
+    saveCommunityHealthLocales();
+  });
 });
 
 // eslint-disable-next-line no-var
