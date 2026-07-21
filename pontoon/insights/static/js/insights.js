@@ -2,7 +2,7 @@ const nf = new Intl.NumberFormat('en', {
   style: 'percent',
 });
 
-const scoreFormat = new Intl.NumberFormat('en', {
+const sf = new Intl.NumberFormat('en', {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });
@@ -206,9 +206,7 @@ var Pontoon = (function (my) {
                   maxTicksLimit: 3,
                   precision: 0,
                   callback: function (value) {
-                    return isScore
-                      ? scoreFormat.format(value)
-                      : nf.format(value / 100);
+                    return isScore ? sf.format(value) : nf.format(value / 100);
                   },
                 },
                 beginAtZero: true,
@@ -241,7 +239,7 @@ var Pontoon = (function (my) {
 
                     const label = chart.data.datasets[datasetIndex].label;
                     const value = isScore
-                      ? scoreFormat.format(parsed.y)
+                      ? sf.format(parsed.y)
                       : nf.format(parsed.y / 100);
                     return `${label}: ${value}`;
                   },

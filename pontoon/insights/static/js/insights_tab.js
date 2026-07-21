@@ -1,11 +1,10 @@
-const scoreFormat = new Intl.NumberFormat('en', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
 // eslint-disable-next-line no-var
 var Pontoon = (function (my) {
   const nf = new Intl.NumberFormat('en');
+  const sf = new Intl.NumberFormat('en', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
   const pf = new Intl.NumberFormat('en', {
     style: 'percent',
     maximumFractionDigits: 2,
@@ -1058,7 +1057,7 @@ var Pontoon = (function (my) {
                 },
                 displayColors: false,
                 callbacks: {
-                  label: (context) => scoreFormat.format(context.parsed.y),
+                  label: (context) => sf.format(context.parsed.y),
                 },
               },
             },
