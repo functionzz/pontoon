@@ -3,6 +3,7 @@ const nf = new Intl.NumberFormat('en', {
 });
 
 const scoreFormat = new Intl.NumberFormat('en', {
+  minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });
 

@@ -1,3 +1,8 @@
+const scoreFormat = new Intl.NumberFormat('en', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
 // eslint-disable-next-line no-var
 var Pontoon = (function (my) {
   const nf = new Intl.NumberFormat('en');
@@ -1053,7 +1058,7 @@ var Pontoon = (function (my) {
                 },
                 displayColors: false,
                 callbacks: {
-                  label: (context) => nf.format(context.parsed.y),
+                  label: (context) => scoreFormat.format(context.parsed.y),
                 },
               },
             },
