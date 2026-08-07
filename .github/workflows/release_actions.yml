@@ -26,7 +26,7 @@ jobs:
         run: |
           # SHA=$(curl -fsS --max-time 10 \
             # https://pontoon.mozilla.org/static/revision.txt | tr -d '[:space:]')
-          SHA=4259c337c9019c0bbd3a89a575adf503420184f6
+          SHA=1fedb2138cf72e2adef273c1795e8a77d023ac11
           # Also guards the interpolation below: an HTML error page or anything
           # else unexpected stops here rather than reaching a shell.
           if ! printf '%s' "$SHA" | grep -qE '^[0-9a-f]{40}$'; then
