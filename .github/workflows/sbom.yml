@@ -1,19 +1,16 @@
 name: SSDLC SBOM
 
 on:
-  workflow_run:
-    workflows: ["Automated Release"]
-    types:
-      - completed
+  release:
+    types: [published]
 
 permissions: {}
 
 jobs:
   sbom:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       actions: read
       contents: write
     uses: mozilla/ssdlc-actions/.github/workflows/ssdlc-sbom.yml@aa759c845c83060e2473fd8df60f9f408e34675d # v1.2
     with:
-      sbom_name: ${{ github.event.release.tag_name }}
+      sbom_name: ${{ github.event.release.tag_name || github.sha }}
